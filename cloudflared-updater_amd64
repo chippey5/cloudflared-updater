@@ -1,0 +1,24 @@
+#!/bin/bash
+
+cloudflaredLink="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
+
+curl -L -o /var/tmp/cloudflared $cloudflaredLink
+curlErr=$?
+if [ $curlErr = 0 ] && [ -f "/var/tmp/cloudflared" ]; then
+        chmod +x /var/tmp/cloudflared
+        oldVer="$(/usr/local/bin/cloudflared -v | grep -oP "\s\d*\.\d*\.\d*\s" | xargs)"
+        newVer="$(/var/tmp/./cloudflared -v | grep -oP "\s\d*\.\d*\.\d*\s" | xargs)"
+        if [ "$oldVer" = "$newVer" ] && [ $? = 0 ]; then
+                echo "Version up-to-date"
+                #rm /var/tmp/cloudflared
+                echo "[$(date +"%d/%m %Y %H:%M:%S")] Version already up-to-date: $newVer" >> /var/log/cloudflared-updater.log
+        else
+                echo "Updating version $newVer over $oldVer"
+                #systemctl stop cloudflared
+                #mv /var/tmp/cloudflared /usr/local/bin/cloudflared
+                echo "[$(date +"%d/%m %Y %H:%M:%S")] Updated $newVer over $oldVer" >> /var/log/cloudflared-updater.log
+                #systemctl start cloudflared
+        fi
+else
+        echo "[$(date +"%d/%m %Y %H:%M:%S")] Error fetching version from \"$cloudflaredLink\" with error code $curlErr" >> /var/log/cloudflared-updater.log
+fi
