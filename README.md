@@ -23,12 +23,12 @@ Add the script to `crontab` as root. Logs will show up at `/var/log/cloudflared-
 
 * ##### i386: https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_i386
 
-* ##### ARMv8 64-bit: https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_arm64
+* ##### ARMv8 (64-bit): https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_arm64
 
-* ##### ARMv8/ARMv7/ARMv6 32-bit: https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_armv6
+* ##### ARMv6/ARMv7/ARMv8 (32-bit): https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_armv6
 
 
-###### All the links are available at https://github.com/cloudflare/cloudflared/releases/
+###### All the _cloudflared_ releases are available at https://github.com/cloudflare/cloudflared/releases/
 
 ## Examples 
 
