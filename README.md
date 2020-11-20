@@ -8,24 +8,24 @@ This requires you to have cloudflared manually installed under `/usr/local/bin/c
 
 ## Installation
 
-Download the script and modify the link in the script to fit your arch (links further down):
+Modify the link to fit your arch and download the script (link sources further down):
 
 ```
-curl -L https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater -o ./cloudflared-updater
+curl -L -o ./cloudflared-updater https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_{ARCH}
 ```
 
 Add the script to `crontab` as root. Logs will show up at `/var/log/cloudflared-updater.log`
 
 
-#### Links for architectures
+#### Link sources for architectures
 
-* ##### AMD64: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+* ##### AMD64: https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_amd64
 
-* ##### i386: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386
+* ##### i386: https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_i386
 
-* ##### ARMv8 64-bit: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64
+* ##### ARMv8 64-bit: https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_arm64
 
-* ##### ARMv8/ARMv7/ARMv6 32-bit: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-armv6
+* ##### ARMv8/ARMv7/ARMv6 32-bit: https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_armv6
 
 
 ###### All the links are available at https://github.com/cloudflare/cloudflared/releases/
