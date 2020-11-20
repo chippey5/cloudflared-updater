@@ -10,7 +10,6 @@ if [ $curlErr = 0 ] && [ -f "/var/tmp/cloudflared" ]; then
         oldVer="$(/usr/local/bin/cloudflared -v 2>&1)"
         newVer="$(/var/tmp/./cloudflared -v 2>&1)"
         if [ "$oldVer | grep -oP $shortVerPattern | xargs" = "$newVer | grep -oP $shortVerPattern | xargs" ]; then
-                echo "Version up-to-date"
                 rm /var/tmp/cloudflared
                 echo "[$(date +"%d/%m %Y %H:%M:%S")] Version already up-to-date: $newVer" | tee -a /var/log/cloudflared-updater.log
         elif [[ $newVer =~ "cannot\sexecute\sbinary\sfile" ]]; then
