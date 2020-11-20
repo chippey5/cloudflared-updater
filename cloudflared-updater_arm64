@@ -2,23 +2,26 @@
 
 cloudflaredLink="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64"
 
-curl -L -o /var/tmp/cloudflared $cloudflaredLink
+curl -L -o /var/tmp/cloudflared $cloudflaredLink --fail
 curlErr=$?
+shortVerPattern='\s\d*\.\d*\.\d*\s'
 if [ $curlErr = 0 ] && [ -f "/var/tmp/cloudflared" ]; then
         chmod +x /var/tmp/cloudflared
-        oldVer="$(/usr/local/bin/cloudflared -v | grep -oP "\s\d*\.\d*\.\d*\s" | xargs)"
-        newVer="$(/var/tmp/./cloudflared -v | grep -oP "\s\d*\.\d*\.\d*\s" | xargs)"
-        if [ "$oldVer" = "$newVer" ] && [ $? = 0 ]; then
+        oldVer="$(/usr/local/bin/cloudflared -v 2>&1)"
+        newVer="$(/var/tmp/./cloudflared -v 2>&1)"
+        if [ "$oldVer | grep -oP $shortVerPattern | xargs" = "$newVer | grep -oP $shortVerPattern | xargs" ]; then
                 echo "Version up-to-date"
-                #rm /var/tmp/cloudflared
-                echo "[$(date +"%d/%m %Y %H:%M:%S")] Version already up-to-date: $newVer" >> /var/log/cloudflared-updater.log
+                rm /var/tmp/cloudflared
+                echo "[$(date +"%d/%m %Y %H:%M:%S")] Version already up-to-date: $newVer" | tee -a /var/log/cloudflared-updater.log
+        elif [[ $newVer =~ "cannot\sexecute\sbinary\sfile" ]]; then
+                echo "[$(date +"%d/%m %Y %H:%M:%S")] Error running executable. Either the binary is corrupt or you're running it on the wrong architecture." | tee -a /var/log/cloudflared-updater.log
         else
-                echo "Updating version $newVer over $oldVer"
-                #systemctl stop cloudflared
-                #mv /var/tmp/cloudflared /usr/local/bin/cloudflared
-                echo "[$(date +"%d/%m %Y %H:%M:%S")] Updated $newVer over $oldVer" >> /var/log/cloudflared-updater.log
-                #systemctl start cloudflared
+                systemctl stop cloudflared
+                mv /var/tmp/cloudflared /usr/local/bin/cloudflared
+                echo "[$(date +"%d/%m %Y %H:%M:%S")] Updated $($newVer | grep -oP $shortVerPattern | xargs) over $($oldVer | grep -oP $shortVerPattern | xargs)" | tee -a /var/log/cloudflared-updater.log
+                systemctl start cloudflared
         fi
 else
-        echo "[$(date +"%d/%m %Y %H:%M:%S")] Error fetching version from \"$cloudflaredLink\" with error code $curlErr" >> /var/log/cloudflared-updater.log
+        echo "[$(date +"%d/%m %Y %H:%M:%S")] Error fetching release from \"$cloudflaredLink\" with error code $curlErr" | tee -a /var/log/cloudflared-updater.log
 fi
+
