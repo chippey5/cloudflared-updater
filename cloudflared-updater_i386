@@ -19,7 +19,6 @@ if [ $curlErr = 0 ] && [ -f "/var/tmp/cloudflared" ]; then
         else
                 systemctl stop cloudflared
                 mv /var/tmp/cloudflared /usr/local/bin/cloudflared
-                #cp /var/tmp/cloudflared /usr/local/bin/cloudflared
                 echo "[$(date +"%d/%m %Y %H:%M:%S")] Updated to $newVerShort over $oldVerShort." | tee -a /var/log/cloudflared-updater.log
                 systemctl start cloudflared
         fi
