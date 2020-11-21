@@ -7,20 +7,22 @@ curlErr=$?
 shortVerPattern='\s\d*\.\d*\.\d*\s'
 if [ $curlErr = 0 ] && [ -f "/var/tmp/cloudflared" ]; then
         chmod +x /var/tmp/cloudflared
-        oldVer="$(/usr/local/bin/cloudflared -v 2>&1)"
-        newVer="$(/var/tmp/./cloudflared -v 2>&1)"
-        if [ "$oldVer | grep -oP $shortVerPattern | xargs" = "$newVer | grep -oP $shortVerPattern | xargs" ]; then
+        oldVerLong="$(/usr/local/bin/cloudflared -v 2>&1)"
+        oldVerShort=$(echo "$oldVerLong" | grep -oP $shortVerPattern | xargs)
+        newVerLong="$(/var/tmp/./cloudflared -v 2>&1)"
+        newVerShort=$(echo "$newVerLong" | grep -oP $shortVerPattern | xargs)
+        if [ "$oldVerLong" = "$newVerLong" ]; then
                 rm /var/tmp/cloudflared
-                echo "[$(date +"%d/%m %Y %H:%M:%S")] Version already up-to-date: $newVer" | tee -a /var/log/cloudflared-updater.log
-        elif [[ $newVer =~ "cannot\sexecute\sbinary\sfile" ]]; then
+                echo "[$(date +"%d/%m %Y %H:%M:%S")] Version already up-to-date: $newVerLong." | tee -a /var/log/cloudflared-updater.log
+        elif [[ $newVerLong =~ "cannot\sexecute\sbinary\sfile" ]]; then
                 echo "[$(date +"%d/%m %Y %H:%M:%S")] Error running executable. Either the binary is corrupt or you're running it on the wrong architecture." | tee -a /var/log/cloudflared-updater.log
         else
                 systemctl stop cloudflared
                 mv /var/tmp/cloudflared /usr/local/bin/cloudflared
-                echo "[$(date +"%d/%m %Y %H:%M:%S")] Updated $($newVer | grep -oP $shortVerPattern | xargs) over $($oldVer | grep -oP $shortVerPattern | xargs)" | tee -a /var/log/cloudflared-updater.log
+                #cp /var/tmp/cloudflared /usr/local/bin/cloudflared
+                echo "[$(date +"%d/%m %Y %H:%M:%S")] Updated to $newVerShort over $oldVerShort." | tee -a /var/log/cloudflared-updater.log
                 systemctl start cloudflared
         fi
 else
         echo "[$(date +"%d/%m %Y %H:%M:%S")] Error fetching release from \"$cloudflaredLink\" with error code $curlErr" | tee -a /var/log/cloudflared-updater.log
 fi
-
