@@ -1,6 +1,6 @@
 # cloudflared-updater
 
-A simple bash script to update the cloudflared binary in conjunction to the guide used at https://docs.pi-hole.net/guides/dns-over-https/#if-you-configured-cloudflared-with-your-own-service-files. 
+A simple bash script to update the cloudflared binary in conjunction to the guide used at https://docs.pi-hole.net/guides/dns/cloudflared/ (manual installation steps). 
 
 ## Prerequisites
 This requires you to have cloudflared manually installed under `/usr/local/bin/cloudflared` and a systemd service for it called `cloudflared`.
@@ -12,6 +12,11 @@ Modify the link to fit your arch and download the script (link sources further d
 
 ```
 curl -L -o ./cloudflared-updater https://github.com/chippey5/cloudflared-updater/releases/latest/download/cloudflared-updater_{ARCH}
+```
+
+Make the file executable
+```
+chmod +x cloudflared-updater
 ```
 
 Add the script to `crontab` as root. Logs will show up at `/var/log/cloudflared-updater.log`
