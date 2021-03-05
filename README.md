@@ -47,5 +47,5 @@ Add the script to `crontab` as root. Logs will show up at `/var/log/cloudflared-
 
 Add the following to the bottom of the list and modify the path:
 ```
-0 0 * * 0 bash /path/to/cloudflared-updater.sh
+0 0 * * 0 /bin/bash /path/to/cloudflared-updater
 ```
